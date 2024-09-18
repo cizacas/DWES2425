@@ -10,6 +10,11 @@
     - [Aplicaciones web cliente-servidor](#aplicaciones-web-cliente-servidor)
     - [Aplicaciones web de tres capas](#aplicaciones-web-de-tres-capas)
     - [Aplicaciones web con más de tres capas](#aplicaciones-web-con-más-de-tres-capas)
+    - [Que es un microservicio](#que-es-un-microservicio)
+      - [Características de los Microservicios](#características-de-los-microservicios)
+      - [Ventajas](#ventajas)
+      - [Desventajas](#desventajas)
+    - [Ejemplo de Arquitectura de Microservicios](#ejemplo-de-arquitectura-de-microservicios)
   - [Tipos de aplicaciones web](#tipos-de-aplicaciones-web)
   - [Lenguajes de programación utilizados.  Lenguajes de scripting](#lenguajes-de-programación-utilizados--lenguajes-de-scripting)
     - [Del lado del cliente](#del-lado-del-cliente)
@@ -64,6 +69,37 @@ Las cuatro capas típicas en una arquitectura de cuatro capas son las siguientes
 * __Capa de datos__: En esta capa se gestionan los datos y la interacción con el almacenamiento de datos. Puede incluir bases de datos, sistemas de archivos, servicios web, API, etc. Esta capa se encarga de la persistencia y recuperación de datos.
 
 Con los microservicios, actualmente se puede llegar a arquitecturas hexagonales con hasta seis capas diferentes. Más información sobre [la arquitectura hexagonal](https://openwebinars.net/blog/que-es-la-arquitectura-hexagonal/)
+
+### Que es un microservicio
+
+Un microservicio es un estilo arquitectónico que estructura una aplicación como un conjunto de servicios pequeños y autónomos, cada uno ejecutándose en su propio proceso y comunicándose entre sí a través de interfaces bien definidas, generalmente HTTP/REST o mensajes. Cada microservicio está centrado en una única funcionalidad de negocio y puede ser desarrollado, desplegado y escalado de manera independiente.
+
+#### Características de los Microservicios
+
+1. **Descomposición por Funcionalidad**: Cada microservicio se enfoca en una funcionalidad específica del negocio.
+2. **Despliegue Independiente**: Los microservicios pueden ser desplegados de manera independiente sin afectar a otros servicios.
+3. **Escalabilidad Independiente**: Cada microservicio puede ser escalado de manera independiente según sus necesidades de carga.
+4. **Comunicación a través de APIs**: Los microservicios se comunican entre sí mediante APIs bien definidas, generalmente usando HTTP/REST o mensajería.
+5. **Desarrollo Autónomo**: Equipos pequeños y autónomos pueden desarrollar y mantener microservicios de manera independiente.
+6. **Tecnologías Heterogéneas**: Cada microservicio puede ser desarrollado con diferentes tecnologías y lenguajes de programación según lo que mejor se adapte a su funcionalidad.
+
+#### Ventajas
+
+- **Flexibilidad en el Desarrollo**: Permite a los equipos trabajar de manera independiente en diferentes servicios.
+- **Escalabilidad**: Facilita la escalabilidad de partes específicas de la aplicación.
+- **Resiliencia**: Aisla fallos a servicios individuales, mejorando la resiliencia general del sistema.
+- **Despliegue Continuo**: Facilita el despliegue continuo y la integración continua.
+
+#### Desventajas
+
+- **Complejidad Operacional**: Aumenta la complejidad en la gestión y monitoreo de múltiples servicios.
+- **Comunicación entre Servicios**: La comunicación entre servicios puede ser más lenta y propensa a fallos.
+- **Consistencia de Datos**: Mantener la consistencia de datos entre servicios puede ser un desafío.
+
+### Ejemplo de Arquitectura de Microservicios
+![imagen lenguajes](img/microservicio.jpg) 
+
+Cada uno de estos servicios puede ser desarrollado, desplegado y escalado de manera independiente, comunicándose entre sí a través de APIs bien definidas.
 
 
 <div class="page"/>
