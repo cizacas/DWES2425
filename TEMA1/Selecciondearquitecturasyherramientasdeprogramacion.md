@@ -14,7 +14,7 @@
       - [Características de los Microservicios](#características-de-los-microservicios)
       - [Ventajas](#ventajas)
       - [Desventajas](#desventajas)
-    - [Ejemplo de Arquitectura de Microservicios](#ejemplo-de-arquitectura-de-microservicios)
+      - [Ejemplo de Arquitectura de Microservicios](#ejemplo-de-arquitectura-de-microservicios)
   - [Tipos de aplicaciones web](#tipos-de-aplicaciones-web)
   - [Lenguajes de programación utilizados.  Lenguajes de scripting](#lenguajes-de-programación-utilizados--lenguajes-de-scripting)
     - [Del lado del cliente](#del-lado-del-cliente)
@@ -96,7 +96,7 @@ Un microservicio es un estilo arquitectónico que estructura una aplicación com
 - **Comunicación entre Servicios**: La comunicación entre servicios puede ser más lenta y propensa a fallos.
 - **Consistencia de Datos**: Mantener la consistencia de datos entre servicios puede ser un desafío.
 
-### Ejemplo de Arquitectura de Microservicios
+#### Ejemplo de Arquitectura de Microservicios
 ![imagen lenguajes](img/microservicio.jpg) 
 
 Cada uno de estos servicios puede ser desarrollado, desplegado y escalado de manera independiente, comunicándose entre sí a través de APIs bien definidas.
