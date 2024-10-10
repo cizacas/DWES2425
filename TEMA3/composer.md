@@ -62,6 +62,7 @@ Define your dependencies.
 # Add PSR-4 autoload mapping? Maps namespace "cic/01-primer-proyecto" to the entered relative path. [src/, n to skip]: no
 ```
 Nos ha creado un archivo __composer.json__ donde figuran las dependencias 
+
 ```json
 {
     "name": "cic/01-primer-proyecto",
