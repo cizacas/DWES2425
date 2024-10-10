@@ -45,7 +45,9 @@ php composer.phar -V
 ## Añadir composer a un proyecto
 
 Si hemos realizado una instalación a nivel global simplemente llamamos a __composer__  si es una instalación local tendriamos que ejecutar __php composer.phar__
+
 ```shell
+
 composer init
 
 # Package name (<vendor>/<name>) [cic/01-primer-proyecto]: 
