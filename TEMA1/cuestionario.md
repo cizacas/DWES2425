@@ -2,6 +2,8 @@
 
 ### Cuestionario
 
+preguntas del tema1
+
 1. **¿Qué es un microservicio?**
    - A) Un pequeño servicio web
    - B) Un estilo arquitectónico que estructura una aplicación como un conjunto de servicios pequeños y autónomos
@@ -247,11 +249,9 @@
     - D) Un servidor web
     - **Respuesta correcta: B**
 
-Claro, aquí tienes un cuestionario de 15 preguntas basado en el contenido del archivo 
 
-Hoja01_Herramientas_02.md
+ contenido basado en la Hoja01_Herramientas_02.md
 
-. Cada pregunta tiene cuatro opciones y solo una respuesta correcta.
 
 ### Cuestionario
 
@@ -361,7 +361,7 @@ Hoja01_Herramientas_02.md
     - **Respuesta correcta: C**
 
 
-Claro, aquí tienes un cuestionario de 20 preguntas basado en los artículos sobre cómo instalar LAMP en Ubuntu. Cada pregunta tiene cuatro opciones y solo una respuesta correcta.
+en los artículos sobre cómo instalar LAMP en Ubuntu.
 
 ### Cuestionario
 
@@ -372,7 +372,7 @@ Claro, aquí tienes un cuestionario de 20 preguntas basado en los artículos sob
    - D) Linux, Apache, MySQL, Python
    - **Respuesta correcta: A**
 
-2. **¿Cuál es el primer paso para instalar LAMP en Ubuntu?**
+2. **¿Cuál es el primer paso para instalar Apache en Ubuntu?**
    - A) Instalar MySQL
    - B) Instalar Apache
    - C) Instalar PHP

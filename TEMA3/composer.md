@@ -286,7 +286,8 @@ $holaMundoController->index();
 ```
 Una vez tenemos todo preparado, podemos ejecutar el servidor web y comprobar que todo funciona correctamente.
 ```shell
-composer dump-start
+composer dump-autoload
+composer start
 ```
 y desde cualquier navegador 
 
@@ -370,16 +371,16 @@ Composer ofrece una serie de comandos avanzados que pueden ser útiles en cierta
 
 * **composer show**: Este comando muestra información sobre las dependencias instaladas en un proyecto, incluyendo sus nombres, versiones y autores.
 * **composer validate**: Este comando valida el archivo "composer.json" para asegurar que está bien formado y que las dependencias especificadas son válidas.
-* **composer why-not <package>**: Este comando muestra por qué un paquete determinado no puede ser instalado en el proyecto actual, incluyendo cualquier conflicto de versiones o dependencias.
-* **composer why <package>**: Este comando muestra qué paquetes hacen que se instale el paquete dado.
+* **composer why-not\<package\>**: Este comando muestra por qué un paquete determinado no puede ser instalado en el proyecto actual, incluyendo cualquier conflicto de versiones o dependencias.
+* **composer why \<package\>**: Este comando muestra qué paquetes hacen que se instale el paquete dado.
 * **composer self-update**: Este comando actualiza la instalación de Composer a la última versión disponible.
 * **composer outdated**: Este comando muestra las dependencias de un proyecto que están desactualizadas y las versiones más recientes disponibles.
 * **composer create-project**: Este comando se utiliza para crear un proyecto a partir de un paquete Composer existente. Por ejemplo, se puede utilizar para instalar un framework como Laravel o Symfony.
-* **composer global require <package>**: Este comando instala una dependencia globalmente en el sistema, lo que permite utilizarla en cualquier proyecto sin tener que instalarla manualmente.
-* **composer prohibits <package>**: Este comando muestra qué paquetes impiden que se instale el paquete dado.
-* **composer home <package>**: Este comando muestra la página del repositorio del paquete dado, si no se ofrece, en un proyecto Laravel por ejemplo se abrirá la página del repositorio de Laravel Framework.
+* **composer global require \<package\>**: Este comando instala una dependencia globalmente en el sistema, lo que permite utilizarla en cualquier proyecto sin tener que instalarla manualmente.
+* **composer prohibits \<package\>**: Este comando muestra qué paquetes impiden que se instale el paquete dado.
+* **composer home \<package\>**: Este comando muestra la página del repositorio del paquete dado, si no se ofrece, en un proyecto Laravel por ejemplo se abrirá la página del repositorio de Laravel Framework.
 * **composer suggests**: Este comando muestra sugerencias de paquetes para nuestro proyecto.
-* **composer exec <binary>**: Este comando ejecuta un script binario del directorio vendor/bin.
+* **composer exec \<binary\>**: Este comando ejecuta un script binario del directorio vendor/bin.
 * **composer fund**: Este comando muestra cómo ayudar a financiar el mantenimiento de las dependencias utilizadas.
 * **composer licenses**: Este comando muestra información acerca del tipo de licencias de las dependencias utilizadas.
 * **composer status**: Este comando muestra una lista de paquetes modificados localmente.
