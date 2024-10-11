@@ -348,7 +348,7 @@ y desde cualquier navegador
 
 ## Ejemplo Cargar una libreria desde un directorio local
 
-Si previamente hemos descargado la libreria de github a un directorio local  y queremos que en un proyecto se utilice esa libreria local debemos modificar el fichero 
+Si previamente hemos descargado la libreria de github a un directorio local utiizando el `comando clone` y queremos que en un proyecto se utilice esa libreria local debemos modificar el fichero 
 __composer.json__ 
 
 ```json
@@ -362,7 +362,7 @@ __composer.json__
         "hackzilla/password-generator": "^1.6"
     }
 ```
-En este caso hemos descargado la libreria externa en un directorio denominado `libreria` este directorio se encuentra dentro del proyecto definido  y en este caso para realizar la carga de la libreria hay que realizar un `composer update`
+En este caso hemos descargado la libreria externa en un directorio denominado `libreria` este directorio se encuentra dentro del proyecto definido  y en este caso para realizar la carga de la libreria hay que realizar un `composer update` si el proyecto ya existía o un `composer install` si es lo primero que realizamos.
 
 ```shell
 composer update
