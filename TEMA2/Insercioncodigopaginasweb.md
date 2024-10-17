@@ -142,6 +142,9 @@ La incrustación de código PHP en HTML se puede hacer de varias maneras:
         <?php
             echo $salida;
         ?>
+    //equivalente es poner
+    
+        <?= $salida; ?>
 ```
 ```html
         </title>
