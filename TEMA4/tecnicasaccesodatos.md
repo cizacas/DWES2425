@@ -58,19 +58,18 @@ Ofrece un interface de programación dual, pudiendo accederse utilizando objetos
 Por ejemplo, para establecer una conexión con un servidor MySQL y consultar su versión, podemos utilizar cualquiera de las siguientes formas:
 
 - Utilizando objetos
-
 ```php
 //utilizando constructores y métodos de la programación orientada a objetos
 $conexion = new mysqli('localhost', 'usuario', 'contraseña', 'base_de_datos');
 print $conexion‐>server_info;
 ```
-- Utilizando funciones
-  
+- Utilizando funciones 
 ```php 
 // utilizando llamadas a funciones 
 $conexion = mysqli_connect('localhost', 'usuario', 'contraseña', 'base_de_datos');
 print mysqli_get_server_info($conexion);
 ```
+
 ## PHP Data Objects(PDO)
 
 PDO se basa en las características de orientación a objetos de PHP pero, al contrario que la extensión MySQLi, no ofrece un interface de programación dual. 
@@ -88,7 +87,6 @@ Para establecer una conexión con una base de datos utilizando PDO hay que insta
 ```php 
 $dwes = new PDO('mysql:host=localhost;dbname=dwes', 'dwes', 'abc123.');
 ```
-
 Si se utiliza **el controlador para MySQL**, los parámetros específicos para utilizar en la cadena DSN (separadas unas de otras por el carácter punto y coma) a continuación del prefijo mysql: son los siguientes:
 - **host**: nombre o dirección IP del servidor.
 - **port**: número de puerto TCP en el que escucha el servidor.
