@@ -87,6 +87,7 @@ Para establecer una conexión con una base de datos utilizando PDO hay que insta
 ```php 
 $dwes = new PDO('mysql:host=localhost;dbname=dwes', 'dwes', 'abc123.');
 ```
+
 Si se utiliza **el controlador para MySQL**, los parámetros específicos para utilizar en la cadena DSN (separadas unas de otras por el carácter punto y coma) a continuación del prefijo mysql: son los siguientes:
 - **host**: nombre o dirección IP del servidor.
 - **port**: número de puerto TCP en el que escucha el servidor.
