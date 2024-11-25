@@ -286,6 +286,7 @@ Para asegurar las sesiones en PHP, hay varias prácticas recomendadas que se pue
 
 
 :computer: Hoja05_Sesiones_03
+:computer: Hoja05_Sesiones_04
 
 
 
