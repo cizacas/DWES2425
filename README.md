@@ -26,3 +26,9 @@
 [Apuntes de la Unidad 5.](TEMA5/dawcodigoembebido.md)
 
 [Depurardor Xdebug](TEMA5/InstalarXdebug.md)
+
+**6. UNIDAD 6.Generación dinámica de páginas web.**
+
+[Apuntes de la Unidad 6.](TEMA6/generacionDinamicaPaginasWeb.md)
+
+
