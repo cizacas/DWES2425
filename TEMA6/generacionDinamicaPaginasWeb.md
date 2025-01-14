@@ -473,6 +473,8 @@ Route::get(‘foo’, [FooController::class,’method'])->name(“foo.method");
 Luego dede una plantilla podríamos hacer
 
 ```html
+```html
+<a href="\{\{ route('foo.method') \}\}">¡Aprieta aquí!</a>
 <a href="&#123;&#123; route('foo.method') &#125;&#125;">¡Aprieta aquí!</a>
 ```
 :computer: Hoja06_MVC_03
