@@ -785,7 +785,7 @@ public function insertar(Request $request){
         ]);
 }
 ```
-Las reglas de validacion se pueden consultar [enlace](https://laravel.com/docs/11.x/validation#available-validation-rules)
+Las reglas de validacion se pueden consultar [enlace](https://laravel.com/docs/10.x/validation#available-validation-rules)
 
 #### Form Request para validaciones más complejas
 Existe otra alternativa para validaciones más complejas, de forma que así evitamos poner más codigo en los controladores y organizamos mejor el código. Se trarta de los form request, una clase adicional que contiene toda la lógica de validación. Los creamos con el comando php artisan
