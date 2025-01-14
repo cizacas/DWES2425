@@ -461,6 +461,7 @@ si creamos un controlador con __la opción -r__ en vez de -i, __creará un contr
 
 También podemos crear subcarpetas dentro de la carpeta Controllers para  organizarnos mejor. Pero a la hora de hacer referencia al controlador únicamente  se tendrá que hacer a través de su espacio de nombres.
 Por ejemplo para crear un controlador en app\Http\Controllers\Fotos\AdminController:
+
 ```php
 php artisan make:controller Fotos/AdminController
 ```
@@ -473,9 +474,6 @@ Route::get(‘foo’, [FooController::class,’method'])->name(“foo.method");
 Luego dede una plantilla podríamos hacer
 
 ```html
-
-<a href="\{\{ route('foo.method') \}\}">¡Aprieta aquí!</a>
-<a href="&#123;&#123; route('foo.method') &#125;&#125;">¡Aprieta aquí!</a>
 <a href="{{ '{{' }} route('foo.method') {{ '}}' }}">¡Aprieta aquí!</a>
 ```
 :computer: Hoja06_MVC_03
