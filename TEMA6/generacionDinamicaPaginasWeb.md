@@ -1101,7 +1101,7 @@ protected $table = 'my_users';
 Laravel también asume que cada tabla tiene declarada una clave primaria con el nombre id.
 En el caso de que no sea así y queramos cambiarlo tendremos que sobrescribir el valor de la propiedad	protegida	$primaryKey	del	modelo.
 ```php
-protected	$primaryKey='my_id';.
+protected $primaryKey='my_id';.
 ```
 ##### Timestamps
 Otra propiedad que en ocasiones tendremos que establecer son los timestamps automáticos.
