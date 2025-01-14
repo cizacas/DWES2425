@@ -994,8 +994,10 @@ Ejemplo:
 ```
 Podemos consultar [todos los tipos de datos](https://laravel.com/docs/master/migrations#creating-columns)
 
+
 ##### Añadir índices
 Schema soporta los siguientes tipos de índices:
+
 |Comando| Descripción |
 | ------------- | ------------------------------ |
 |$table->primary('id');|Añadir una clave primaria|
