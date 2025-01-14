@@ -553,29 +553,29 @@ En general __el código__ que incluye __Blade en una vista__ empezará por __los
 Blade no añade sobrecarga de procesamiento,  ya que todas las vistas son
 preprocesadas y cacheadas.
 
-El método más básico que tenemos en Blade es el de mostrar datos. Para esto  utilizaremos las llaves dobles {{ }} y dentro de ellas escribiremos la variable o  función a mostrar:
+El método más básico que tenemos en Blade es el de mostrar datos. Para esto  utilizaremos las llaves dobles {{ '{{' }} }}y dentro de ellas escribiremos la variable o  función a mostrar:
 <div class="page"/>
 
 Ejemplo:
 
 ```php 
-Hola {{$name}}
-La hora actual es {{time()}}
+Hola {{ '{{' }}$name}}
+La hora actual es {{ '{{' }}time()}}
 ```
 #### Mostrar un dato solo si existe
 
 Para	comprobar	que	una	variable	existe	o	tiene	un	determinado  valor podemos utilizar el operador ternario de la forma:
 ``` 
-  {{ isset($name) ? $name : 'Valor por defecto' }}
+  {{ '{{' }} isset($name) ? $name : 'Valor por defecto' }}
 ```
 O simplemente usar la notación que incluye Blade para este fin:
 ``` 
-  {{ $name or 'Valor por defecto' }}
+  {{ '{{' }} $name or 'Valor por defecto' }}
 ```
 #### Comentarios
 Para escribir comentarios en Blade se utilizan los símbolos {{-- y --}}:
 ``` 
-  {{-- Este comentario no se mostrará en HTML --}}
+  {{ '{{' }}-- Este comentario no se mostrará en HTML --}}
 ```
 
 #### Estructuras de control
@@ -596,20 +596,20 @@ Todas las directivas Blade vienen precedidas del __símbolo @__ nos permite util
 __Estructuras repetitivas bucles tipo for, while o foreach__
 ```php
 @for ($i = 0; $i < 10; $i++)  
-  El valor actual es {{ $i }}
+  El valor actual es {{ '{{' }} $i }}
 @endfor
 @while (true)
 <p>Soy un bucle while infinito!</p>  
 @endwhile
 @foreach ($users as $user)
-<p>Usuario {{ $user->name }} con identificador: {{ $user->id }}</p>  
+<p>Usuario {{ '{{' }} $user->name }} con identificador: {{ '{{' }} $user->id }}</p>  
 @endforeach
 ```
 __Estructura alternativa que controla a la vez que la variable esté definida y tenga elementos forelse__
 Esta directiva permite una cláusula adicional @empty para indicar qué hacer si la colección no tiene elementos o está sin definir.
 ```php
 @forelse ($elementos as $elemento)
-<li> {{$elemento}}</li>
+<li> {{ '{{' }}$elemento}}</li>
 @empty
 <li>No hay elementos que mostrar </li>
 @endforelse
@@ -622,11 +622,11 @@ echo "<a href='/contacto'>contacto</a>";
 ```
 o bien empleando la funcion route, seguida del nombre que le dado a la ruta:
 ```php
-<a href="{{route('ruta_contacto')}}">contacto</a>;
+<a href="{{ '{{' }}route('ruta_contacto')}}">contacto</a>;
 ```
 Mediante Blade, empleando la funcion url, que genera una URL completa hasta la ruta que indiquemos
 ```php
-<a href="{{url('/contacto')}}">contacto</a>
+<a href="{{ '{{' }}url('/contacto')}}">contacto</a>
 ```
 <div class="page"/>
 
@@ -661,6 +661,8 @@ Un ejemplo
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('titulo')</title>
+    <!-- css -->
+    @vite('resources/css/app.css')
     <!--favicon -->
 </head>
 <body>
@@ -728,7 +730,7 @@ return redirect()->route(‘formulario.index')->withInput();
 Para crear formularios la recomendación de laravel sobre __el parámetro action__ cuando tenemos que indicarle una dirección es __utilizar el método route__ , para lo cual la ruta del controlador tiene que tener un name.
 Ejemplo
 ```php
-<form action="{{route('cursos.insertar')}}" method="POST">
+<form action="{{'{{'}}route('cursos.insertar')}}" method="POST">
 // en web.php la ruta esta definida
 Route::post('cursos',[CursoController::class,'insertar'])->name('cursos.insertar');
 ```
@@ -738,7 +740,7 @@ Por ejemplo, podemos definir la ruta "curso" de tipo GET para que nos devuelva l
 
 Desde una vista con Blade podemos asignar el contenido de una variable (en el  ejemplo $nombre) para que aparezca el campo de texto con dicho valor. Esta  opción es muy útil para crear formularios en los que tenemos que __editar un  contenido ya existente__, como por ejemplo editar los datos de usuario:
 ```php
-<input type="text" name="nombre" id="nombre" value="{{ $nombre }}">
+<input type="text" name="nombre" id="nombre" value="{{'{{'}} $nombre }}">
 ```
 Para mostrar los valores introducidos en una  petición anterior podemos usar el __método old__, el cuál recuperará las variables almacenadas en la petición anterior.
 
@@ -751,7 +753,7 @@ return back()->withInput();
 ```
 El método withInput() añade todas las variables de entrada a la sesión, y esto nos  permite recuperarlas después de la forma:
 ```php
-<input type="text" name="nombre" id="nombre" value="{{ old('nombre’) }}">
+<input type="text" name="nombre" id="nombre" value="{{'{{'}} old('nombre’) }}">
 ```
 
 #### Protección contra CSRF
@@ -762,7 +764,7 @@ Laravel proporciona una forma fácil de protegernos de este tipo de  ataques. Si
 Esto añadirá un campo oculto ya configurado con los valores necesarios. Un olvido de esta directiva provoca el error de tipo 419
 Ejemplo
 ```php
-<form action="{{route('clientes.insertar')}}" method="POST">
+<form action="{{'{{'}}route('clientes.insertar')}}" method="POST">
     @csrf
   ...
 </form>
@@ -783,7 +785,7 @@ public function insertar(Request $request){
         ]);
 }
 ```
-Las reglas de validacion se pueden consultar [enlace](https://laravel.com/docs/10.x/validation#available-validation-rules)
+Las reglas de validacion se pueden consultar [enlace](https://laravel.com/docs/11.x/validation#available-validation-rules)
 
 #### Form Request para validaciones más complejas
 Existe otra alternativa para validaciones más complejas, de forma que así evitamos poner más codigo en los controladores y organizamos mejor el código. Se trarta de los form request, una clase adicional que contiene toda la lógica de validación. Los creamos con el comando php artisan
