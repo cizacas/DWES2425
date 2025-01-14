@@ -519,8 +519,7 @@ En este ejemplo estamos pasando las variables nombre y apellidos a la vista inic
 lo habitual es acceder a la variable mediante la sintaxis específica de Blade, el motor de plantillas de Laravel que veremos.
 
 ```php
-<p> bienvenido a \{\{$nombre\}\}.",".\{\{$apellidos\}\}</p>
-<p> bienvenido a &#123;&#123; $nombre &#125;&#125;, &#123;&#123; $apellidos &#125;&#125;</p>
+<p> bienvenido a {{ '{{' }}$nombre}}.",". {{ '{{' }}$apellidos}}</p>
 ```
 #### Organización de las vistas
 Las vistas se pueden organizar en sub-carpetas dentro de la carpeta resources/views.
