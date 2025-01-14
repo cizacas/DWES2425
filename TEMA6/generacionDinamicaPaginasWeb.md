@@ -548,7 +548,7 @@ Los ficheros de vistas que utilizan el sistema de plantillas Blade tienen que te
 
 Esta extensión tampoco se tendrá que incluir a la hora de referenciar una vista  desde el fichero de rutas o desde un controlador. Es decir, utilizaremos view('home')  tanto si el fichero se llama home.php como home.blade.php.
 
-En general __el código__ que incluye __Blade en una vista__ empezará por __los símbolos @__  o __{{__, el cual posteriormente será procesado y preparado para mostrarse por  pantalla.
+En general __el código__ que incluye __Blade en una vista__ empezará por __los símbolos @__  o __'{{'__, el cual posteriormente será procesado y preparado para mostrarse por  pantalla.
 
 Blade no añade sobrecarga de procesamiento,  ya que todas las vistas son
 preprocesadas y cacheadas.
