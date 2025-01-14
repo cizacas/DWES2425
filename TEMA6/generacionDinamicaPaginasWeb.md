@@ -471,8 +471,9 @@ en el fichero de rutas se debe añadir un __name__ a la ruta:
 Route::get(‘foo’, [FooController::class,’method'])->name(“foo.method");
 ```
 Luego dede una plantilla podríamos hacer
+
 ```html
-<a href="{{ route(‘foo.method') }}">¡Aprieta aquí!</a>
+<a href="{{ '{' }}{{ route('foo.method') }}{{ '}' }}">¡Aprieta aquí!</a>
 ```
 :computer: Hoja06_MVC_03
 
@@ -505,7 +506,6 @@ Otra alternativa es pasarlo como segundo parámetro a la función __view__ como 
 return view('inicio',['nombre'=>$nombre,'apellidos'=>$apellidos]);
 ```
 Otra mucho más usada es con la funcion __compact__ como segundo parámetro de __view__. En este caso, solo le pasamos el nombre de la variable definida en nuestro código cuyo valor queremos pasar a la vista.
-
 ```php
 return view('inicio',compact('nombre','apellidos'));
 ```
@@ -518,7 +518,8 @@ En este ejemplo estamos pasando las variables nombre y apellidos a la vista inic
 lo habitual es acceder a la variable mediante la sintaxis específica de Blade, el motor de plantillas de Laravel que veremos.
 
 ```php
-<p> bienvenido a {{$nombre}}.",".{{$apellidos}}</p>
+<p> bienvenido a \{\{$nombre\}\}.",".\{\{$apellidos\}\}</p>
+<p> bienvenido a &#123;&#123; $nombre &#125;&#125;, &#123;&#123; $apellidos &#125;&#125;</p>
 ```
 #### Organización de las vistas
 Las vistas se pueden organizar en sub-carpetas dentro de la carpeta resources/views.
