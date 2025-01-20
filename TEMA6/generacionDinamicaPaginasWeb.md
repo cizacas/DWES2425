@@ -777,11 +777,13 @@ Ejemplo
 public function insertar(Request $request){
         $request->validate(
           [ 'nombre'=>'required|min:4',
-            'apellidos'=>'required:min:4'
+            'apellidos'=>'required|min:4'
           ],
           [
             'nombre.required'=>'el nombre es obligatorio',
-            'apellidos.required'=>'los apellidos son obligatorios'
+            'nombre.min'=>'el nombre debe tener al menos 4 dígitos',
+            'apellidos.required'=>'los apellidos son obligatorios',
+            'apellidos.min'=>'el apellido debe tener al menos 4 dígitos'
         ]);
 }
 ```
@@ -830,7 +832,7 @@ class CrearClienteRequest extends FormRequest
     public function rules()
     {
        return [ 'nombre'=>'required|min:4',
-                'apellidos'=>'required:min:4'
+                'apellidos'=>'required|min:4'
           ];
     }
     public function attributes()
@@ -844,7 +846,9 @@ class CrearClienteRequest extends FormRequest
     {
         return[
             'nombre.required'=>'el nombre es obligatorio',
-            'apellidos.required'=>'los apellidos son obligatorios'
+            'nombre.min'=>'el nombre debe tener al menos 4 dígitos',
+            'apellidos.required'=>'los apellidos son obligatorios',
+            'apellidos.min'=>'el apellido debe tener al menos 4 dígitos'
         ];
     }
 }
