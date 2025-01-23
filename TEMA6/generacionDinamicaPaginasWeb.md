@@ -1461,7 +1461,7 @@ Si lo deseamos podemos modificar el contenido y diseño de cualquier vista, así
 #### Autenticación de un usuario
 Si accedemos a la ruta login, introducimos unos datos y éstos son correctos, se creará la sesión del usuario y se le redirigirá a la ruta "/dashboard".
 
-Si queremos cambiar esta ruta tenemos que definir la constante HOME en  el controlador RouteServiceProvider, por ejemplo:
+Si queremos cambiar esta ruta tenemos que definir la constante HOME en  el directorio **config** en el fichero **fortify.php**, por ejemplo:
 ```php
 public const HOME='/';
 ```
