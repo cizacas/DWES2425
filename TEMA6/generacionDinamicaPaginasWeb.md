@@ -73,8 +73,11 @@
       - [Comprobar si un usuario está autenticado](#comprobar-si-un-usuario-está-autenticado)
     - [Middleware o filtros](#middleware-o-filtros)
       - [Definir un nuevo Middleware](#definir-un-nuevo-middleware)
-      - [Middleware global](#middleware-global)
+      - [Middleware global en Laravel 11](#middleware-global-en-laravel-11)
       - [Middleware asociado a rutas](#middleware-asociado-a-rutas)
+      - [Exclusión de Middleware](#exclusión-de-middleware)
+      - [Alias de Middleware](#alias-de-middleware)
+      - [Parámetros de Middleware](#parámetros-de-middleware)
         - [Proteger rutas](#proteger-rutas)
 
 
@@ -1518,6 +1521,7 @@ if (Auth::check()) {
 Sin embargo, lo recomendable es utilizar __Middleware__ para realizar esta comprobación antes de permitir el acceso a determinadas rutas.
 
 ### Middleware o filtros
+
 Los Middleware son un mecanismo proporcionado por Laravel para __filtrar las peticiones HTTP__ que se realizan a una aplicación.
 
 Un filtro o middleware se define como una clase PHP almacenada en un fichero dentro de la carpeta __App/Http/Middleware__.
@@ -1529,6 +1533,7 @@ Laravel incluye varios filtros por defecto. Uno de ellos es el encargado de real
 Laravel incluye middleware para gestionar la autenticación, el modo mantenimiento, la protección contra CSRF (Cross-site request forgery o falsificación de petición en sitios cruzados), y algunos más.
 
 Además de éstos podemos crear nuestros propios Middleware
+
 #### Definir un nuevo Middleware
 Para crear un nuevo Middleware podemos utilizar el comando de Artisan:
 ```php
@@ -1588,47 +1593,121 @@ Laravel permite la utilización de Middleware de tres formas distintas:
 * global
 * asociado a rutas o grupos de rutas
 * asociado a un controlador o a un método de un controlador.
-En los tres casos será necesario registrar primero el Middleware en la __clase App/Http/Kernel.php__.
 
-#### Middleware global
 
-Para hacer que un Middleware se ejecute con todas las peticiones HTTP realizadas a una aplicación simplemente lo tenemos que registrar en el __array $middleware__ definido en la __clase App/Http/Kernel.php__. 
+#### Middleware global en Laravel 11
+
+Para hacer que un Middleware se ejecute con todas las peticiones HTTP realizadas a una aplicación simplemente lo tenemos que registrar en el __archivo bootstrap.app__.
 ```php  
-protected $middleware = [
-\App\Http\Middleware\TrustProxies::class,
-\App\Http\Middleware\CheckForMaintenanceMode::class,
-\Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
-\App\Http\Middleware\TrimStrings::class,
-\Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-\App\Http\Middleware\MyMiddleware::class,
-];
+use App\Http\Middleware\MyMiddleware;
+->withMiddleware(function (Middleware $middleware){
+  $middleware ->append(MyMiddleware::class);
+})
+
 ```
-En este ejemplo hemos registrado la clase MyMiddleware al final del array. Si queremos que nuestro middleware se ejecute antes que otro filtro simplemente tendremos que colocarlo antes en la posición del array.
+En este ejemplo hemos registrado la clase MyMiddleware. Si queremos que nuestro middleware se ejecute antes que otro filtro y tener un control sobre su orden cuando se asignan a la ruta. En estas situaciones, puede especificar la prioridad del middleware usando el método __priority__ en el archivo __bootstrap/app.php__:
+```php 
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->priority([
+        \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+        \Illuminate\Cookie\Middleware\EncryptCookies::class,
+        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
+        \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        \Illuminate\Routing\Middleware\ThrottleRequestsWithRedis::class,
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
+        \Illuminate\Auth\Middleware\Authorize::class,
+    ]);
+})
+
+```
 
 #### Middleware asociado a rutas
 
-También tendremos que registrarlo en el fichero App/Http/Kernel.php, pero en el array $routeMiddleware. Al añadirlo a este array además tendremos que asignarle un nombre o clave, que será el que después utilizaremos asociarlo con una ruta.
-En primer lugar añadimos nuestro filtro al array y le asignamos el nombre "es_mayor_de_edad":
-```php
-protected $routeMiddleware = [
-'auth' => \App\Http\Middleware\Authenticate::class,  'auth.basic' =>
-\Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,  'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-'es_mayor_de_edad' => \App\Http\Middleware\MyMiddleware::class,
-];
-```
-Una vez registrado ya lo podemos utilizar en el fichero de rutas mediante la clave o nombre asignado, por ejemplo:
+Si se desea asignar middleware a rutas específicas, se invoca el método middleware al definir la ruta:
 ```php
 Route::get('/', function () {
 //
-})->middleware(‘es_mayor_de_edad’);
+})->middleware(MyMiddleware::class);
 ```
-En el ejemplo anterior hemos asignado el middleware con clave es_mayor_de_edad a la ruta /. Si la petición supera el filtro entonces se ejecutara la función asociada.
+En el ejemplo anterior hemos asignado el middleware __MyMiddleware__ a la ruta __/__. Si la petición supera el filtro entonces se ejecutara la función asociada.
 Laravel también permite asignar múltiples filtros a una determinada ruta:
 ```php
 Route::get('/', function () {
 //
-})->middleware(['first', 'second']);
+})->middleware([First::class, Second::class]);
 ```
+#### Exclusión de Middleware
+
+Al asignar un middleware a un grupo de rutas, podemos necesitar evitar que el middleware se aplique a una ruta individual dentro del grupo. Se puede realizar usando el método __withoutMiddleware__:
+```php
+use App\Http\Middleware\EnsureTokenIsValid;
+
+Route::middleware([EnsureTokenIsValid::class])->group(function () {
+    Route::get('/', function () {
+        // ...
+    });
+
+    Route::get('/profile', function () {
+        // ...
+    })->withoutMiddleware([EnsureTokenIsValid::class]);
+});
+```
+#### Alias de Middleware
+Se puede asignar allias a los middleware dentro de su archivo __bootstrap/app.php__. Los alias de middleware permiten definir un alias corto para una clase de middleware dada, especialmente utili si tenemos nombres largos
+```php  
+use App\Http\Middleware\MyMiddleware;
+->withMiddleware(function (Middleware $middleware){
+  $middleware->alias(['menorEdad'=>MyMiddleware::class]);
+})
+```
+Una vez el alias se ha definido en el archivo de la aplicación, se puede usar ese alias en las rutas
+```php
+Route::get('/', function () {
+//
+})->middleware('menorEdad');
+```
+#### Parámetros de Middleware
+
+El middleware puede recibir parámetros adicionales. Por ejemplo, si necesitamos verificar que el usuario autenticado tenga un determinado __rol__ antes de realizar una acción dada, se podría crear un middleware `EnsureUserHasRol`que reciba un nombre de rol como argumento adicional:
+```php
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class EnsureUserHasRole
+{
+    public function handle(Request $request, Closure $next, string $role): Response
+    {
+        if (!$request->user()->hasRole($role)) {
+            // Redirigir...
+        }
+
+        return $next($request);
+    }
+}
+```
+Los parámetros adicionales del middleware se pasarán al middleware después del argumento $next.
+Si registramos este middleware en el archivo __bootstrap/app.php__ con el alias `role` luego nos permitirá poner las siguientes rutas:
+```php
+Route::put('/post/{id}', function (string $id) {
+    // ...
+})->middleware('role:editor');
+
+```
+o si es más de un rol, los parámetros los delimitamos por comas:
+```php
+Route::put('/post/{id}', function (string $id) {
+    // ...
+})->middleware('role:editor,publisher');
+```
+
 ##### Proteger rutas
 El sistema de autenticación de Laravel incorpora una serie de filtros o para comprobar que el usuario que accede a una determinada ruta o grupo de rutas esté autenticado.
 Para proteger el acceso a rutas y solo permitir su visualización por usuarios correctamente autenticados usaremos el middleware
