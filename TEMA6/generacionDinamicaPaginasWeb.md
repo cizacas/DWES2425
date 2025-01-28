@@ -7,7 +7,7 @@
     - [Funcionamiento MVC](#funcionamiento-mvc)
   - [Laravel](#laravel)
     - [Instalación](#instalación)
-      - [versiones para Laravel 10](#versiones-para-laravel-10)
+      - [versiones para Laravel 11](#versiones-para-laravel-11)
     - [Patrón de Laravel](#patrón-de-laravel)
     - [Estructura de Laravel](#estructura-de-laravel)
     - [Novedades laravel 10:carpeta lang](#novedades-laravel-10carpeta-lang)
@@ -134,8 +134,8 @@ Características:
 * Utiliza un sistema de procesamiento de plantillas llamado __Blade__,  el cuál hace uso de la caché para darle mayor velocidad
 
 ### Instalación
-#### versiones para Laravel 10
-* php requerida a partir de PHP 8.1.0
+#### versiones para Laravel 11
+* php requerida a partir de PHP 8.2.0
 * Requiere Composer 2.2.0 o superior. 
 
 Para la utilización de Laravel en primer lugar necesitamos tener instalado
@@ -153,22 +153,6 @@ lo siguiente:
 ![Path en compososer de PHP](img/composerphp.png)
 
 * Asegurarse que la librería zip esté activada en el archivo php.ini
-  
-* La librería de laravel
-  * Usando la terminal de GitBash vamos a la carpeta de publicación c:/xampp/htdocs y escribimos:
- 
-  ```
-    composer global require laravel/installer
-  ```
-  
-
-Instala la última versión de Laravel;con el paso del tiempo conviene ir actualizando la version de Laravel con el comando: composer global update laravel/installer
-
-* comprobamos la versión del instalador de lavarel
-  
-```
-laravel -V
-```
        
 * Adicionalmente también es recomendable instalar Node.js. Se instala la herramienta NPM (Node Package Manager), herramienta que permite instalar librerías de JavaScript, como BootStrap o jQuery. [La página oficial de Node.js](https://nodejs.org/en).
     * comprobamos la versión de node.js instalada
@@ -176,14 +160,7 @@ laravel -V
  node -v
 ```
 
-Ahora podemos comprobar que todo lo instalado es correcto y que podemos crear nuestro primer proyecto de prueba en Laravel (lpruebas), aunque anteriormente ya estabamos posicionados en la carpeta de publicación del XAMPP hasta ahora no era necesario pero ahora sí.
-
-```
- laravel new lpruebas
-```
-
-
-También tenemos la opción de solo realizar en un paso la instalación de Laravel y la creación del proyecto, poniendo en __la carpeta de publicación__: 
+Instalación de Laravel y la creación del proyecto, poniendo en __la carpeta de publicación__ por ejemplo, c:\xampp\htdocs: 
 
 ```
 composer create-project laravel/laravel lpruebas
