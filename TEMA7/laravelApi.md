@@ -294,3 +294,9 @@ class Libro extends Model
 
 }
 ```
+## Documentar una API con postman
+
+En la página de [Postman](https://www.postman.com/) nos registramos  y a continuación definiremos `WorkSpace`, que es un espacio de trabajo donde vamos a documentar nuestras apis
+y una `Collection` , una colección que será cada api que vamos a desarrollar.
+También tenemos un `Environments` que donde podemos definir las variables de entorno a utilizar.
+Dentro de una colección tenemos la posibilidad de definir variables, aunque si están definidas en el entorno son las que prevalecen.
