@@ -24,12 +24,11 @@
       - [Crear una sistema para validar las peticiones](#crear-una-sistema-para-validar-las-peticiones)
         - [Crear la validación de un modelo](#crear-la-validación-de-un-modelo)
       - [Aplicar el modelo de validación a un proceso](#aplicar-el-modelo-de-validación-a-un-proceso)
-  - [Servicios web REST](#servicios-web-rest)
-    - [Cliente](#cliente)
-    - [Utilizando Laravel 11](#utilizando-laravel-11)
-      - [Preparar el desarollo de la API](#preparar-el-desarollo-de-la-api)
-      - [Definir una API que no requiere autenticación](#definir-una-api-que-no-requiere-autenticación)
-        - [Ejemplo básico CRUD](#ejemplo-básico-crud)
+  - [Cliente para consumir un servicio web REST](#cliente-para-consumir-un-servicio-web-rest)
+  - [Utilizando Laravel 11 para el desarrollo de un servicio Web Rest](#utilizando-laravel-11-para-el-desarrollo-de-un-servicio-web-rest)
+    - [Preparar el desarollo de la API](#preparar-el-desarollo-de-la-api)
+    - [Definir una API que no requiere autenticación](#definir-una-api-que-no-requiere-autenticación)
+      - [Ejemplo básico CRUD](#ejemplo-básico-crud)
 
 ## Introducción
 En ocasiones, las aplicaciones que desarrolles necesitarán compartir información con otras aplicaciones o puede ser que, una vez que esté finalizada y funcionando, quieras programar una nueva aplicación (y no necesariamente una aplicación web)
@@ -90,8 +89,20 @@ El espacio de nombres de un documento WSDL es https://schemas.xmlsoap.org/wsdl, 
 
 Actualmente en desuso.
 
+
 ## API REST
 Una API REST, o API RESTful, es una interfaz de programación de aplicaciones (API o API web) que se ajusta a los límites de la arquitectura REST y permite la interacción con los servicios web de RESTful. El informático Roy Fielding es el creador de la transferencia de estado representacional (REST).
+
+REST es una tecnología mucho más flexible que transporta datos por medio del protocolo HTTP.
+
+Además permite utilizar los diversos métodos que proporciona HTTP para comunicarse, como lo son GET, POST, PUT, DELETE, PATCH.
+
+Permite transmitir prácticamente __cualquier tipo de datos__, ya que el tipo de datos está definido por el Header Content-Type, lo que nos permite mandar, XML, JSON, binarios (imágenes o documentos),  text, etc.
+* La gran mayoría transmite en JSON por un motivo muy importante: JSON es interpretado de forma natural por JavaScript
+  
+REST es más liviano en peso y mucho más rápido en su procesamiento que SOAP.
+![servicio rest](img/rest.png)
+
 
 ### Que és
 Una API REST (Representational State Transfer) es un estilo de arquitectura de software que se utiliza para diseñar sistemas de comunicación en red, especialmente en el contexto de aplicaciones web. Es un enfoque que se basa en el protocolo HTTP y se adhiere a ciertos principios y restricciones que facilitan la interacción entre sistemas de software de una manera simple y eficiente.
@@ -167,7 +178,6 @@ composer require --dev phpstan/phpstan
 
 composer require --dev friendsofphp/php-cs-fixer
 ```
-
 
 Una configuración de estas herramientas dentro de un proyecto puede ser:
 *  `phpstan.neon`
@@ -981,19 +991,7 @@ Una prueba de validación es:
 :computer: Hoja07_API_01 (ejercicio 3)
 
 
-## Servicios web REST
-
-REST es una tecnología mucho más flexible que transporta datos por medio del protocolo HTTP.
-
-Además permite utilizar los diversos métodos que proporciona HTTP para comunicarse, como lo son GET, POST, PUT, DELETE, PATCH.
-
-Permite transmitir prácticamente __cualquier tipo de datos__, ya que el tipo de datos está definido por el Header Content-Type, lo que nos permite mandar, XML, JSON, binarios (imágenes o documentos),  text, etc.
-* La gran mayoría transmite en JSON por un motivo muy importante: JSON es interpretado de forma natural por JavaScript
-  
-REST es más liviano en peso y mucho más rápido en su procesamiento que SOAP.
-![servicio rest](img/rest.png)
-
-### Cliente
+## Cliente para consumir un servicio web REST
 Para obtener los datos del un servicio web REST se utiliza la [__librería cURL__](https://www.php.net/manual/es/book.curl.php). Es una biblioteca que permite conectarse y comunicarse con diferentes tipos de servidores y diferentes tipos de protocolos:http, https, ftp, gopher, telnet, dict, file y ldap. cURL se utiliza a diario en líneas de comando o scripts para transferir datos.
 
 
@@ -1027,11 +1025,11 @@ Hay una opción especifica para post
 
 Este cliente puede ser utilizado en vez de PostMan para obtener la respuesta, para ver esa respuesta como devuelve un array de datos tendremos que realizar un __var_dump()__ para ver dicha respuesta o bien no introducir la opción CURLOPT_RETURNTRANSFER
 
-### Utilizando Laravel 11
+## Utilizando Laravel 11 para el desarrollo de un servicio Web Rest
 
 Laravel 11 para el desarrollo de una api utiliza el módulo [laravel sanctum](https://documentacionlaravel.com/docs/11.x/sanctum) para la gestión de la autenticación del usuario
 
-#### Preparar el desarollo de la API
+### Preparar el desarollo de la API
 
 Para crear una api, ejecutamos el comando dentro del proyecto 
 
@@ -1089,7 +1087,7 @@ Ejemplo:
 ![swagger ejemplo](img/Swagger.jpg)
 
 
-#### Definir una API que no requiere autenticación
+### Definir una API que no requiere autenticación
 
 Las rutas de un servicio web las definimos en el fichero **api.php** que se encuentra en el directorio `routes`.
 
@@ -1103,7 +1101,7 @@ Nos genera todas las rutas necesarias para gestionar el CRUD
 
 Como vemos en la imagen nos genera todas las rutas necesarias para crear un CRUD en este ejemplo de la entidad `Producto`.
 
-##### Ejemplo básico CRUD
+#### Ejemplo básico CRUD
 Los pasos a realizar:
 1. Crearemos un proyecto nuevo denominado `ApiProductos`
 2.  Realizaremos los pasos de **Preparar el desarrollo de la api** del punto anterior
