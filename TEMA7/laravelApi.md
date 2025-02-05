@@ -1,7 +1,7 @@
-
+## Utilizando Laravel 11 para el desarrollo de un servicio web REST
 Laravel 11 para el desarrollo de una api utiliza el módulo [laravel sanctum](https://documentacionlaravel.com/docs/11.x/sanctum) para la gestión de la autenticación del usuario
 
-#### Preparar el desarollo de la API
+### Preparar el desarollo de la API
 
 Para crear una api, ejecutamos el comando dentro del proyecto 
 
@@ -59,7 +59,7 @@ Ejemplo:
 ![swagger ejemplo](img/Swagger.jpg)
 
 
-#### Definir una API que no requiere autenticación
+### Definir una API que no requiere autenticación
 
 Las rutas de un servicio web las definimos en el fichero **api.php** que se encuentra en el directorio `routes`.
 
@@ -73,7 +73,7 @@ Nos genera todas las rutas necesarias para gestionar el CRUD
 
 Como vemos en la imagen nos genera todas las rutas necesarias para crear un CRUD en este ejemplo de la entidad `Producto`.
 
-##### Ejemplo básico CRUD
+#### Ejemplo básico CRUD
 Los pasos a realizar:
 1. Crearemos un proyecto nuevo denominado `ApiProductos`
 2.  Realizaremos los pasos de **Preparar el desarrollo de la api** del punto anterior
