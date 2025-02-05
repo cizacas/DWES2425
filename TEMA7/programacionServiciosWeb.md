@@ -25,7 +25,7 @@
         - [Crear la validación de un modelo](#crear-la-validación-de-un-modelo)
       - [Aplicar el modelo de validación a un proceso](#aplicar-el-modelo-de-validación-a-un-proceso)
   - [Cliente para consumir un servicio web REST](#cliente-para-consumir-un-servicio-web-rest)
-  - [Utilizando Laravel 11 para el desarrollo de un servicio Web Rest](#utilizando-laravel-11-para-el-desarrollo-de-un-servicio-web-rest)
+  - [Utilizando Laravel 11 para el desarrollo de un servicio web REST](#utilizando-laravel-11-para-el-desarrollo-de-un-servicio-web-rest)
     - [Preparar el desarollo de la API](#preparar-el-desarollo-de-la-api)
     - [Definir una API que no requiere autenticación](#definir-una-api-que-no-requiere-autenticación)
       - [Ejemplo básico CRUD](#ejemplo-básico-crud)
@@ -1025,7 +1025,7 @@ Hay una opción especifica para post
 
 Este cliente puede ser utilizado en vez de PostMan para obtener la respuesta, para ver esa respuesta como devuelve un array de datos tendremos que realizar un __var_dump()__ para ver dicha respuesta o bien no introducir la opción CURLOPT_RETURNTRANSFER
 
-## Utilizando Laravel 11 para el desarrollo de un servicio Web Rest
+## Utilizando Laravel 11 para el desarrollo de un servicio web REST
 
 Laravel 11 para el desarrollo de una api utiliza el módulo [laravel sanctum](https://documentacionlaravel.com/docs/11.x/sanctum) para la gestión de la autenticación del usuario
 
