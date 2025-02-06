@@ -29,6 +29,10 @@
     - [Preparar el desarollo de la API](#preparar-el-desarollo-de-la-api)
     - [Definir una API que no requiere autenticación](#definir-una-api-que-no-requiere-autenticación)
       - [Ejemplo básico CRUD](#ejemplo-básico-crud)
+    - [Definir una API que requiere autenticación](#definir-una-api-que-requiere-autenticación)
+      - [Cómo funciona:](#cómo-funciona)
+      - [Preparar Swagger para api autenticada](#preparar-swagger-para-api-autenticada)
+      - [Ejemplo de Login](#ejemplo-de-login)
 
 ## Introducción
 En ocasiones, las aplicaciones que desarrolles necesitarán compartir información con otras aplicaciones o puede ser que, una vez que esté finalizada y funcionando, quieras programar una nueva aplicación (y no necesariamente una aplicación web)
@@ -1349,3 +1353,157 @@ Por ejemplo, si creamos un producto deberiamos validar:
         ]);
 ```
 :computer: Hoja07_WebServices_01
+### Definir una API que requiere autenticación
+Laravel utiliza tokens de autenticación para asegurar las APIs. El paquete Laravel Sanctum proporciona un sistema de autenticación de API ligero para SPAs (Single Page Applications), aplicaciones móviles y simples APIs basadas en tokens.
+
+#### Cómo funciona:
+1. **Generación de Tokens**: Los usuarios autenticados pueden generar tokens de acceso que se almacenan en la base de datos.
+2. **Uso de Tokens**: Estos tokens se envían con las solicitudes API en los encabezados de autorización.
+3. **Validación de Tokens**: Laravel valida estos tokens para asegurar que las solicitudes provienen de usuarios autenticados.
+
+Laravel Sanctum genera tokens de acceso que se pueden usar como `Bearer Tokens` en las solicitudes API. `Un Bearer Token` es un tipo de token de acceso que se incluye en el encabezado de autorización de una solicitud HTTP.
+
+En el paso **preparar el desarrollo de la api** hemos establecido que el usuario puede generar tokens de autotenticación, pero tenemos que realizar algunas configuraciones más que explicamos a continuación:
+
+#### Preparar Swagger para api autenticada
+Para que Swagger implemente autenticación es necesario instalar otra libreria
+```bash
+   composer require zircote/swagger-php
+```
+Debemos también documentar el controlador en nuestro ejemplo productos con `@OA\SecurityScheme`
+```
+ * @OA\SecurityScheme(
+ *     type="http",
+ *     description="Use a token to authenticate",
+ *     name="Authorization",
+ *     in="header",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     securityScheme="bearerAuth",
+ * )
+ ```
+ y también documentar cada uno de los métodos que requieran seguridad por ejemplo el store (crear un producto) donde antes del `@OA\RequestBody` añadimos la etiqueta security 
+```
+ * security={{"bearerAuth":{}}},
+ ```
+También añadiremos la respuesta de no autorizado en el caso que no tenga toquen asociado.
+```
+* @OA\Response(
+    * response=401,
+    * description="No autorizado"
+* )
+```
+En Swagger aparece un botón en la cabecera denominado `Autorize` que es donde introduciremos el token que nos devuelve el login del usuario. 
+Tenemos que crear un login de usuario donde al identificarse si es un usuario del sistema genere el token requerido para realizar las acciones que requieran seguridad. Como paso previo debemos tener crear al menos un usuario en la aplicación.
+
+#### Ejemplo de Login
+
+Definimos un controlador `LoginController`  donde comprobamos por correo electrónico y password que sea un usuario de la aplicación en ese caso devolvemos el nombre, correo electrónico y el token.
+```php
+class LoginController extends Controller
+{
+    /**
+     * Handle the incoming request.
+     */
+
+    /**
+     * @OA\Post(
+        * path="/api/login",
+        * summary="Login",
+        * description="Login del usuario",
+        * operationId="login",
+        * tags={"login"},
+        * @OA\RequestBody(
+        *    required=true,
+        *    description="Datos del usuario",
+        *    @OA\JsonContent(
+        *       required={"email","password"},
+        *       @OA\Property(property="email", type="string", format="email", example="prueba@prueba.es"),
+        *       @OA\Property(property="password", type="string", format="password", example="12345678")
+        *    ),
+        * ),
+        * @OA\Response(
+        *  response=200,
+        *  description="Login correcto",
+        *  @OA\JsonContent(
+        *       @OA\Property(property="user", type="object",
+        *           @OA\Property(property="name", type="string"),
+        *           @OA\Property(property="email", type="string")
+        *       ),
+        *       @OA\Property(property="token", type="string")
+        *  )
+        * ),
+        * @OA\Response(
+        *  response=401,
+        *  description="No autorizado",
+        *  @OA\JsonContent(
+        *       @OA\Property(property="message", type="string")
+        *  )
+        * )
+        * )
+    */
+    public function __invoke(Request $request)
+    {
+        $user=User::where('email',$request->email)->first();
+        if(!$user || !Hash::check($request->password,$user->password)){
+            return response()->json(['message'=>'No autorizado'],401);
+         }
+        return response()->json([
+        'user'=>[
+            'name'=>$user->name,
+            'email'=>$user->email,
+        ],
+        'token'=>$user->createToken($request->email)->plainTextToken]);
+    }
+}
+```
+Creamos la ruta de login de tipo post en el fichero de rutas de apis
+
+```php
+Route::post('/login',LoginController::class);
+```
+Como ejemplo vamos a poner seguridad a la creación del usuario, por lo que tendremos que modificar la documentación del método según las ins
+```
+/**
+*@OA\Post(
+    * path="/api/productos",
+    * summary="Crear un producto",
+    * description="Crear un producto",
+    * operationId="store",
+    * tags={"productos"},
+    * security={{"bearerAuth":{}}},
+    * @OA\RequestBody(
+        * required=true,
+        * description="Datos del producto",
+        * @OA\JsonContent(
+            * required={"nombre","precio","stock"},
+            * @OA\Property(property="nombre", type="string", example="Producto 1"),
+            * @OA\Property(property="descripcion", type="string", example="Descripción del producto"),
+            * @OA\Property(property="precio", type="number", format="float", example="10.5"),
+            * @OA\Property(property="stock", type="integer", example="10"),
+            * @OA\Property(property="categoria_id", type="integer", example="1")
+        *),
+
+    *),
+    * @OA\Response(
+        * response=201,
+        * description="Producto creado",
+        * @OA\JsonContent(ref="#/components/schemas/Producto")
+    *),
+    * @OA\Response(
+        * response=422,
+        * description="Error de validación"
+    * ),
+    * @OA\Response(
+        * response=401,
+        * description="No autorizado"
+    * )
+* )
+*/
+```
+
+```php
+Route::apiResource('productos', ProductoController::class)->except('store');
+Route::middleware('auth:sanctum')->post('productos', [ProductoController::class, 'store']);
+```
+:computer: Hoja07_WebServices_02

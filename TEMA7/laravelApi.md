@@ -322,266 +322,168 @@ Por ejemplo, si creamos un producto deberiamos validar:
 ```
 :computer: Hoja07_WebServices_01
 
+### Definir una API que requiere autenticación
+Laravel utiliza tokens de autenticación para asegurar las APIs. El paquete Laravel Sanctum proporciona un sistema de autenticación de API ligero para SPAs (Single Page Applications), aplicaciones móviles y simples APIs basadas en tokens.
 
+#### Cómo funciona:
+1. **Generación de Tokens**: Los usuarios autenticados pueden generar tokens de acceso que se almacenan en la base de datos.
+2. **Uso de Tokens**: Estos tokens se envían con las solicitudes API en los encabezados de autorización.
+3. **Validación de Tokens**: Laravel valida estos tokens para asegurar que las solicitudes provienen de usuarios autenticados.
 
+Laravel Sanctum genera tokens de acceso que se pueden usar como `Bearer Tokens` en las solicitudes API. `Un Bearer Token` es un tipo de token de acceso que se incluye en el encabezado de autorización de una solicitud HTTP.
 
+En el paso **preparar el desarrollo de la api** hemos establecido que el usuario puede generar tokens de autotenticación, pero tenemos que realizar algunas configuraciones más que explicamos a continuación:
 
-
-
-
-
-
-#### Definir una API que requiere autenticación
-
-Crear **un servicio** donde estén recogidas todas las posibles respuestas del Json y nos ayudamos delos [códigos de respuesta Http](https://developer.mozilla.org/es/docs/Web/HTTP/Status). Este servicio lo vamos a utilizar en todos los controladores para devolver la respuesta 
-
-```php
-php artisan make:class Services\API\Auth\ApiResponseService
+#### Preparar Swagger para api autenticada
+Para que Swagger implemente autenticación es necesario instalar otra libreria
+```bash
+   composer require zircote/swagger-php
 ```
+Debemos también documentar el controlador en nuestro ejemplo productos con `@OA\SecurityScheme`
+```
+ * @OA\SecurityScheme(
+ *     type="http",
+ *     description="Use a token to authenticate",
+ *     name="Authorization",
+ *     in="header",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     securityScheme="bearerAuth",
+ * )
+ ```
+ y también documentar cada uno de los métodos que requieran seguridad por ejemplo el store (crear un producto) donde antes del `@OA\RequestBody` añadimos la etiqueta security 
+```
+ * security={{"bearerAuth":{}}},
+ ```
+También añadiremos la respuesta de no autorizado en el caso que no tenga toquen asociado.
+```
+* @OA\Response(
+    * response=401,
+    * description="No autorizado"
+* )
+```
+En Swagger aparece un botón en la cabecera denominado `Autorize` que es donde introduciremos el token que nos devuelve el login del usuario. 
+Tenemos que crear un login de usuario donde al identificarse si es un usuario del sistema genere el token requerido para realizar las acciones que requieran seguridad. Como paso previo debemos tener crear al menos un usuario en la aplicación.
+
+#### Ejemplo de Login
+
+Definimos un controlador `LoginController`  donde comprobamos por correo electrónico y password que sea un usuario de la aplicación en ese caso devolvemos el nombre, correo electrónico y el token.
 ```php
-<?php
-namespace App\Services\API\Auth;
-use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-
-class ApiResponseService
+class LoginController extends Controller
 {
-    public static function success($data, $message = 'Success', $code = Response::HTTP_OK): JsonResponse
-    {
-        return response()->json([
-            'status' => 'success',
-            'message' => $message,
-            'data' => $data,
-        ], $code);
-    }
+    /**
+     * Handle the incoming request.
+     */
 
-    public static function error($message = 'Error', $code = Response::HTTP_BAD_REQUEST): JsonResponse
+    /**
+     * @OA\Post(
+        * path="/api/login",
+        * summary="Login",
+        * description="Login del usuario",
+        * operationId="login",
+        * tags={"login"},
+        * @OA\RequestBody(
+        *    required=true,
+        *    description="Datos del usuario",
+        *    @OA\JsonContent(
+        *       required={"email","password"},
+        *       @OA\Property(property="email", type="string", format="email", example="prueba@prueba.es"),
+        *       @OA\Property(property="password", type="string", format="password", example="12345678")
+        *    ),
+        * ),
+        * @OA\Response(
+        *  response=200,
+        *  description="Login correcto",
+        *  @OA\JsonContent(
+        *       @OA\Property(property="user", type="object",
+        *           @OA\Property(property="name", type="string"),
+        *           @OA\Property(property="email", type="string")
+        *       ),
+        *       @OA\Property(property="token", type="string")
+        *  )
+        * ),
+        * @OA\Response(
+        *  response=401,
+        *  description="No autorizado",
+        *  @OA\JsonContent(
+        *       @OA\Property(property="message", type="string")
+        *  )
+        * )
+        * )
+    */
+    public function __invoke(Request $request)
     {
+        $user=User::where('email',$request->email)->first();
+        if(!$user || !Hash::check($request->password,$user->password)){
+            return response()->json(['message'=>'No autorizado'],401);
+         }
         return response()->json([
-            'status' => 'error',
-            'message' => $message,
-        ], $code);
-    }
-
-    public static function unauthorized($message = 'Unauthorized'): JsonResponse
-    {
-        return response()->json([
-            'status' => 'error',
-            'message' => $message,
-        ], Response::HTTP_UNAUTHORIZED);
-    }
-
-    public static function forbidden($message = 'Forbidden'): JsonResponse
-    {
-        return response()->json([
-            'status' => 'error',
-            'message' => $message,
-        ], Response::HTTP_FORBIDDEN);
-    }
-
-    public static function notFound($message = 'Not Found'): JsonResponse
-    {
-        return response()->json([
-            'status' => 'error',
-            'message' => $message,
-        ], Response::HTTP_NOT_FOUND);
+        'user'=>[
+            'name'=>$user->name,
+            'email'=>$user->email,
+        ],
+        'token'=>$user->createToken($request->email)->plainTextToken]);
     }
 }
 ```
-
-Crear **una interfaz** para implementar el sistema de autenticación que tendrá al menos definición de los métodos login y logout
-
-```php
-php artisan make:interface Contracts\API\Auth\AuthServiceInterface
-```
-y en el implementamos los métodos para que nos devuelvan un `JsonResponse`
+Creamos la ruta de login de tipo post en el fichero de rutas de apis
 
 ```php
-<?php
-
-namespace App\Contracts\API\Auth;
-
-use Illuminate\Http\JsonResponse;
-
-interface AuthServiceInterface
-{
-    public function login(array $credentials): JsonResponse;
-
-    public function logout(): JsonResponse;
-}
+Route::post('/login',LoginController::class);
 ```
-Crear **un servicio** que implementa la interfaz definida
+Como ejemplo vamos a poner seguridad a la creación del usuario, por lo que tendremos que modificar la documentación del método según las ins
+```
+/**
+*@OA\Post(
+    * path="/api/productos",
+    * summary="Crear un producto",
+    * description="Crear un producto",
+    * operationId="store",
+    * tags={"productos"},
+    * security={{"bearerAuth":{}}},
+    * @OA\RequestBody(
+        * required=true,
+        * description="Datos del producto",
+        * @OA\JsonContent(
+            * required={"nombre","precio","stock"},
+            * @OA\Property(property="nombre", type="string", example="Producto 1"),
+            * @OA\Property(property="descripcion", type="string", example="Descripción del producto"),
+            * @OA\Property(property="precio", type="number", format="float", example="10.5"),
+            * @OA\Property(property="stock", type="integer", example="10"),
+            * @OA\Property(property="categoria_id", type="integer", example="1")
+        *),
+
+    *),
+    * @OA\Response(
+        * response=201,
+        * description="Producto creado",
+        * @OA\JsonContent(ref="#/components/schemas/Producto")
+    *),
+    * @OA\Response(
+        * response=422,
+        * description="Error de validación"
+    * ),
+    * @OA\Response(
+        * response=401,
+        * description="No autorizado"
+    * )
+* )
+*/
+```
+
 ```php
-php artisan make:class Services\API\Auth\AuthSanctumService
+Route::apiResource('productos', ProductoController::class)->except('store');
+Route::middleware('auth:sanctum')->post('productos', [ProductoController::class, 'store']);
 ```
-Vamos a validar los datos de entrada al login por lo que vamos a crear un `Request`
-```php
-php artisan make:request API\Auth\LoginRequest
-```
-```php
-<?php
-
-namespace App\Http\Requests\API\Auth;
-
-use Illuminate\Foundation\Http\FormRequest;
-
-class LoginRequest extends FormRequest
-{
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
-    {
-        return [
-            'email' => 'required'|'email',
-            'password' => 'required'|'string',
-            'name' => 'required'|'string',
-        ];
-    }
-}
-```
-Ahora vamos a crear los controladores que van a ser invocables para tener el código más segmentado aunque podriamos crear un solo controlador con todas las acciones.
-```php
-php artisan make:controller API\Auth\LoginController
-php artisan make:controller API\Auth\LogoutController
-```
+:computer: Hoja07_WebServices_02
 
 
 
-## Ejemplo
-Vamos a crear una librería con autores, generos y libros, donde un libro tendrá un autor y pertenecerá a un género Crearemos los modelos y la entidad asociada en base de datos. Para autores  y generos y en la definición de la tabla incorporamos el campo nombre con una longitud de 100 caracteres.
-```php
-php artisan make:model Autor
-php artisan make:migration create_autores_table
 
-```
-```php
-<?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-        Schema::create('autores', function (Blueprint $table) {
-            $table->id();
-            $table->string('nombre',100);
-            $table->timestamps();
-        });
-    }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('autores');
-    }
-};
-```
-Definiremos el libro con los campos que figuran a continuación y establecemos las relaciones con autores y generos
-```php
-php artisan make:model Libro -m
-```
-```php
 
-<?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-        Schema::create('libros', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(\App\Models\Autor::class)->constrained();
-            $table->foreignIdFor(\App\Models\Genero::class)->constrained();
-            $table->string('titulo', 100);
-            $table->string('isbn', 13);
-            $table->integer('paginas');
-            $table->unsignedTinyInteger('stock');
-            $table->date('publicado_en');
-            $table->timestamps();
-        });
-    }
-```
-Ahora configuraremos los modelos, con el nombre de la tabla y las relaciones establecidas. A continuación figura el ejemplo de Autor  y del Libro
-```php
-<?php
 
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
-class Autor extends Model
-{
-    protected $table = 'autores';
-    protected $fillable = ['nombre'];
-
-    public function libros():HasMany
-    {
-        return $this->hasMany(Libro::class);
-    }
-}
-
-<?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Model;
-
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
-class Libro extends Model
-{
-    protected $fillable = ['titulo','isbn','autor_id','genero_id', 'paginas','stock','publicado_en'];
-
-    protected function casts(): array
-    {
-        return [
-            'publicado_en' => 'date:d-m-Y',
-            'stock' => 'integer',
-            'paginas' => 'integer',
-        ];
-    }
-    public function autor(): BelongsTo
-    {
-        return $this->belongsTo(Autor::class);
-    }
-
-    public function genero(): BelongsTo
-    {
-        return $this->belongsTo(Genero::class);
-    }
-
-}
-```
-## Documentar una API con postman
-
-En la página de [Postman](https://www.postman.com/) nos registramos  y a continuación definiremos `WorkSpace`, que es un espacio de trabajo donde vamos a documentar nuestras apis
-y una `Collection` , una colección que será cada api que vamos a desarrollar.
-También tenemos un `Environments` que donde podemos definir las variables de entorno a utilizar.
-Dentro de una colección tenemos la posibilidad de definir variables, aunque si están definidas en el entorno son las que prevalecen.
