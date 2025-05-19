@@ -154,7 +154,7 @@ final class ConnectionPDODotenv
                     dsn: $_ENV['DB_DSN'],
                     username: $_ENV['DB_USERNAME'],
                     password: $_ENV['DB_PASSWORD'],
-                    $opciones
+                    options:$opciones
                 );
                  self::$connection->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
             }
